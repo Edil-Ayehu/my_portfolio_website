@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter_portfolio_website/export.dart';
+import 'package:flutter_portfolio_website/widgets/lazy_load_grid_view.dart';
 
 class UxSampleProjects extends StatefulWidget {
   const UxSampleProjects({super.key});
@@ -67,6 +66,8 @@ class _UxSampleProjectsState extends State<UxSampleProjects> {
                     height: 50, // Set a fixed height for the ListView
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
+                      cacheExtent: 500,
+                      addAutomaticKeepAlives: true,
                       itemCount: projectDocs.length,
                       itemBuilder: (context, index) {
                         String projectTitle = projectDocs[index]['title'];
@@ -107,60 +108,19 @@ class _UxSampleProjectsState extends State<UxSampleProjects> {
                   ),
                   const SizedBox(height: 20),
                   // Display corresponding images in MasonryGridView based on selected project
-                  MasonryGridView.count(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
+                  LazyLoadGridView(
+                    imageUrls: projectDocs[_selectedProjectIndex]['image_urls']
+                        as List<dynamic>,
                     crossAxisCount:
                         size.width > 900 ? 4 : (size.width > 600 ? 3 : 2),
-                    mainAxisSpacing: 15.0,
-                    crossAxisSpacing: 15.0,
-                    itemCount: (projectDocs[_selectedProjectIndex]['image_urls']
-                            as List<dynamic>)
-                        .length,
-                    itemBuilder: (context, index) {
-                      String imageUrl = (projectDocs[_selectedProjectIndex]
-                          ['image_urls'] as List<dynamic>)[index];
-                      return MouseRegion(
-                        cursor: SystemMouseCursors.click,
-                        child: GestureDetector(
-                          onTap: () {
-                            _currentImageIndex = index; // Set the initial index
-                            _showLargeImage(
-                                context,
-                                projectDocs[_selectedProjectIndex]['image_urls']
-                                    as List<dynamic>);
-                          },
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8.0),
-                            child: Image.network(
-                              imageUrl,
-                              fit: BoxFit.cover,
-                              loadingBuilder: (BuildContext context,
-                                  Widget child,
-                                  ImageChunkEvent? loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return Center(
-                                  child: CircularProgressIndicator(
-                                    value: loadingProgress.expectedTotalBytes !=
-                                            null
-                                        ? loadingProgress
-                                                .cumulativeBytesLoaded /
-                                            (loadingProgress
-                                                    .expectedTotalBytes ??
-                                                1)
-                                        : null,
-                                  ),
-                                );
-                              },
-                              errorBuilder: (BuildContext context, Object error,
-                                  StackTrace? stackTrace) {
-                                return const Center(
-                                  child: Text("Failed to load image"),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
+                    onImageTap: (String imageUrl) {
+                      _currentImageIndex = (projectDocs[_selectedProjectIndex]
+                              ['image_urls'] as List<dynamic>)
+                          .indexOf(imageUrl);
+                      _showLargeImage(
+                        context,
+                        projectDocs[_selectedProjectIndex]['image_urls']
+                            as List<dynamic>,
                       );
                     },
                   ),
@@ -198,105 +158,107 @@ class _UxSampleProjectsState extends State<UxSampleProjects> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return StatefulBuilder(builder: (context, setState) {
-          return Dialog(
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(22),
-                    child: Image.network(
-                      imageUrls[_currentImageIndex],
-                      fit: BoxFit.contain,
-                      loadingBuilder: (BuildContext context, Widget child,
-                          ImageChunkEvent? loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Center(
-                          child: CircularProgressIndicator(
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded /
-                                    (loadingProgress.expectedTotalBytes ?? 1)
-                                : null,
-                          ),
-                        );
-                      },
-                      errorBuilder: (BuildContext context, Object error,
-                          StackTrace? stackTrace) {
-                        return const Center(
-                            child: Text("Failed to load image"));
-                      },
-                    ),
-                  ),
-                ),
-                // Previous Button (visible and outside the image region)
-                if (_currentImageIndex > 0)
-                  Positioned(
-                    left: 10, // Positioned to be visible outside the image
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey,
-                        shape: BoxShape.circle,
-                      ),
-                      child: IconButton(
-                        icon: const Icon(Icons.arrow_back_ios,
-                            size: 20, color: Colors.white),
-                        onPressed: () {
-                          setState(() {
-                            _currentImageIndex--; // Go to the previous image
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                // Next Button (visible and outside the image region)
-                if (_currentImageIndex < imageUrls.length - 1)
-                  Positioned(
-                    right: 10, // Positioned to be visible outside the image
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey,
-                        shape: BoxShape.circle,
-                      ),
-                      child: IconButton(
-                        icon: const Icon(Icons.arrow_forward_ios,
-                            size: 20, color: Colors.white),
-                        onPressed: () {
-                          setState(
-                            () {
-                              _currentImageIndex++; // Go to the next image
-                            },
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Dialog(
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(22),
+                      child: Image.network(
+                        imageUrls[_currentImageIndex],
+                        fit: BoxFit.contain,
+                        loadingBuilder: (BuildContext context, Widget child,
+                            ImageChunkEvent? loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Center(
+                            child: CircularProgressIndicator(
+                              value: loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                      (loadingProgress.expectedTotalBytes ?? 1)
+                                  : null,
+                            ),
                           );
                         },
+                        errorBuilder: (BuildContext context, Object error,
+                            StackTrace? stackTrace) {
+                          return const Center(
+                              child: Text("Failed to load image"));
+                        },
                       ),
                     ),
                   ),
-                // Close Button
-                Positioned(
-                  top: 10,
-                  right: 10,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      shape: BoxShape.circle,
-                    ),
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.close,
-                        size: 20,
-                        color: Colors.white,
+                  // Previous Button (visible and outside the image region)
+                  if (_currentImageIndex > 0)
+                    Positioned(
+                      left: 10, // Positioned to be visible outside the image
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                          shape: BoxShape.circle,
+                        ),
+                        child: IconButton(
+                          icon: const Icon(Icons.arrow_back_ios,
+                              size: 20, color: Colors.white),
+                          onPressed: () {
+                            setState(() {
+                              _currentImageIndex--; // Go to the previous image
+                            });
+                          },
+                        ),
                       ),
-                      onPressed: () {
-                        Navigator.of(context).pop(); // Close the dialog
-                      },
+                    ),
+                  // Next Button (visible and outside the image region)
+                  if (_currentImageIndex < imageUrls.length - 1)
+                    Positioned(
+                      right: 10, // Positioned to be visible outside the image
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                          shape: BoxShape.circle,
+                        ),
+                        child: IconButton(
+                          icon: const Icon(Icons.arrow_forward_ios,
+                              size: 20, color: Colors.white),
+                          onPressed: () {
+                            setState(
+                              () {
+                                _currentImageIndex++; // Go to the next image
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  // Close Button
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey,
+                        shape: BoxShape.circle,
+                      ),
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.close,
+                          size: 20,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Close the dialog
+                        },
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          );
-        },);
+                ],
+              ),
+            );
+          },
+        );
       },
     );
   }

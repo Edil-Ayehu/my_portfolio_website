@@ -46,6 +46,7 @@ dependencies:
   cloud_firestore:
   firebase_storage:
   cached_network_image:
+  visibility_detector: ^0.4.0+2
 
 dev_dependencies:
   flutter_test:

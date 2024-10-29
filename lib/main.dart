@@ -1,12 +1,4 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_portfolio_website/firebase_options.dart';
-import 'package:flutter_portfolio_website/responsive/responsive_layout.dart';
-import 'package:flutter_portfolio_website/screens/mobile_screen_layout.dart';
-import 'package:flutter_portfolio_website/screens/web_screen_layout.dart';
-import 'package:flutter_portfolio_website/theme/my_theme.dart';
-import 'package:flutter_portfolio_website/theme/theme_controller.dart';
-import 'package:provider/provider.dart'; 
+import 'package:flutter_portfolio_website/export.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,11 +25,23 @@ class MyApp extends StatelessWidget {
       theme: MyTheme.lightTheme,
       darkTheme: MyTheme.darkTheme,
       themeMode: themeController.themeMode,
-      // home: UxSampleProjects(),
+            builder: (context, child) {
+        return ScrollConfiguration(
+          behavior: CustomScrollBehavior(),
+          child: child!,
+        );
+      },
       home: ResponsiveLayout(
         mobileScreenLayout: MobileScreenLayout(),
         webScreenLayout: WebScreenLayout(),
       ),
     );
+  }
+}
+
+class CustomScrollBehavior extends ScrollBehavior {
+  @override
+  ScrollPhysics getScrollPhysics(BuildContext context) {
+    return const ClampingScrollPhysics();
   }
 }

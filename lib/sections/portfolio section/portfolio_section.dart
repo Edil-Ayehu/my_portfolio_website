@@ -1,9 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_portfolio_website/screens/mobile_sample_projects.dart';
-import 'package:flutter_portfolio_website/screens/ux_sample_projects.dart';
-import 'package:flutter_portfolio_website/screens/web_sample_projects.dart';
-import 'package:flutter_portfolio_website/sections/portfolio%20section/product_card.dart';
-import 'package:flutter_portfolio_website/widgets/section_title.dart';
+import 'package:flutter_portfolio_website/export.dart';
 
 class PortfolioSection extends StatelessWidget {
   final bool isMobile;
@@ -54,6 +49,8 @@ class PortfolioSection extends StatelessWidget {
               ? SizedBox(
                   height: size.height * 0.34,
                   child: ListView.builder(
+                    cacheExtent: 500,
+                    addAutomaticKeepAlives: true,
                     shrinkWrap: true,
                     itemCount: portfolios.length,
                     scrollDirection: Axis.horizontal,
@@ -85,6 +82,8 @@ class PortfolioSection extends StatelessWidget {
                       : size.height * 0.5,
                   padding: const EdgeInsets.only(left: 36.0, right: 10),
                   child: ListView.builder(
+                    cacheExtent: 500,
+                    addAutomaticKeepAlives: true,
                     shrinkWrap: true,
                     itemCount: portfolios.length,
                     scrollDirection: Axis.horizontal,

@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter_portfolio_website/export.dart';
+import 'package:flutter_portfolio_website/widgets/lazy_load_grid_view.dart';
 
 class WebSampleProjects extends StatefulWidget {
   const WebSampleProjects({super.key});
@@ -66,6 +65,8 @@ class _WebSampleProjectsState extends State<WebSampleProjects> {
                   SizedBox(
                     height: 50, // Set a fixed height for the ListView
                     child: ListView.builder(
+                      cacheExtent: 500,
+                      addAutomaticKeepAlives: true,
                       scrollDirection: Axis.horizontal,
                       itemCount: projectDocs.length,
                       itemBuilder: (context, index) {
@@ -107,59 +108,19 @@ class _WebSampleProjectsState extends State<WebSampleProjects> {
                   ),
                   const SizedBox(height: 20),
                   // Display corresponding images in MasonryGridView based on selected project
-                  MasonryGridView.count(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
+                  LazyLoadGridView(
+                    imageUrls: projectDocs[_selectedProjectIndex]['image_urls']
+                        as List<dynamic>,
                     crossAxisCount:
                         size.width > 900 ? 4 : (size.width > 600 ? 3 : 2),
-                    mainAxisSpacing: 15.0,
-                    crossAxisSpacing: 15.0,
-                    itemCount: (projectDocs[_selectedProjectIndex]['image_urls']
-                            as List<dynamic>)
-                        .length,
-                    itemBuilder: (context, index) {
-                      String imageUrl = (projectDocs[_selectedProjectIndex]
-                          ['image_urls'] as List<dynamic>)[index];
-                      return MouseRegion(
-                        cursor: SystemMouseCursors.click,
-                        child: GestureDetector(
-                          onTap: () {
-                            _currentImageIndex = index; // Set the initial index
-                            _showLargeImage(
-                                context,
-                                projectDocs[_selectedProjectIndex]['image_urls']
-                                    as List<dynamic>);
-                          },
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8.0),
-                            child: Image.network(
-                              imageUrl,
-                              fit: BoxFit.cover,
-                              loadingBuilder: (BuildContext context,
-                                  Widget child,
-                                  ImageChunkEvent? loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return Center(
-                                  child: CircularProgressIndicator(
-                                    value: loadingProgress.expectedTotalBytes !=
-                                            null
-                                        ? loadingProgress
-                                                .cumulativeBytesLoaded /
-                                            (loadingProgress
-                                                    .expectedTotalBytes ??
-                                                1)
-                                        : null,
-                                  ),
-                                );
-                              },
-                              errorBuilder: (BuildContext context, Object error,
-                                  StackTrace? stackTrace) {
-                                return Center(
-                                    child: Text("Failed to load image"));
-                              },
-                            ),
-                          ),
-                        ),
+                    onImageTap: (String imageUrl) {
+                      _currentImageIndex = (projectDocs[_selectedProjectIndex]
+                              ['image_urls'] as List<dynamic>)
+                          .indexOf(imageUrl);
+                      _showLargeImage(
+                        context,
+                        projectDocs[_selectedProjectIndex]['image_urls']
+                            as List<dynamic>,
                       );
                     },
                   ),
