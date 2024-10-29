@@ -1,6 +1,5 @@
 import 'package:flutter_portfolio_website/export.dart';
 
-
 class MobileSampleProjects extends StatefulWidget {
   const MobileSampleProjects({super.key});
 
@@ -156,36 +155,37 @@ class _MobileSampleProjectsState extends State<MobileSampleProjects> {
   void _showLargeImage(BuildContext context, List<dynamic> imageUrls) {
     showDialog(
       context: context,
+      barrierDismissible: true,
       builder: (BuildContext context) {
         return StatefulBuilder(builder: (context, setState) {
           return Dialog(
+            backgroundColor: Colors.transparent,
+            insetPadding: EdgeInsets.zero,
             child: Stack(
               alignment: Alignment.center,
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
+                Hero(
+                  tag: 'image-${imageUrls[_currentImageIndex]}',
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(22),
-                    child: Image.network(
-                      imageUrls[_currentImageIndex],
+                    child: CachedNetworkImage(
+                      imageUrl: imageUrls[_currentImageIndex],
                       fit: BoxFit.contain,
-                      loadingBuilder: (BuildContext context, Widget child,
-                          ImageChunkEvent? loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Center(
+                      placeholder: (context, url) => Container(
+                        color: Colors.transparent,
+                        child: const Center(
                           child: CircularProgressIndicator(
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded /
-                                    (loadingProgress.expectedTotalBytes ?? 1)
-                                : null,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Color(0xFFDDA512)),
                           ),
-                        );
-                      },
-                      errorBuilder: (BuildContext context, Object error,
-                          StackTrace? stackTrace) {
-                        return const Center(
-                            child: Text("Failed to load image"));
-                      },
+                        ),
+                      ),
+                      errorWidget: (context, url, error) => Container(
+                        color: Colors.transparent,
+                        child: const Center(
+                          child: Text("Failed to load image"),
+                        ),
+                      ),
                     ),
                   ),
                 ),
