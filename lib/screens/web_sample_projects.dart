@@ -1,5 +1,4 @@
 import 'package:flutter_portfolio_website/export.dart';
-import 'package:flutter_portfolio_website/widgets/lazy_load_grid_view.dart';
 
 class WebSampleProjects extends StatefulWidget {
   const WebSampleProjects({super.key});

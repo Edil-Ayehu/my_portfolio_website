@@ -127,7 +127,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
                 ),
                 SizedBox(
                   key: _portfolioKey,
-                  child: PortfolioSection(isMobile: true),
+                  child: PortfolioSection(),
                 ),
                 SizedBox(
                   key: _certificatesKey,
