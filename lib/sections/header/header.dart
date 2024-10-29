@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_portfolio_website/sections/header/widgets/name_and_title.dart';
-import 'package:flutter_portfolio_website/sections/header/widgets/profile_bg_container.dart';
+import 'package:flutter_portfolio_website/export.dart';
 
 class Header extends StatefulWidget {
   final bool isMobile;
@@ -15,73 +13,102 @@ class Header extends StatefulWidget {
   State<Header> createState() => _HeaderState();
 }
 
-class _HeaderState extends State<Header> {
+class _HeaderState extends State<Header> with SingleTickerProviderStateMixin {
   // Initial opacity value
   double _opacity = 0.7;
+  late AnimationController _controller;
+  late Animation<double> _fadeInAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    );
+    
+    _fadeInAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeInOut,
+      ),
+    );
+    
+    _controller.forward();
+  }
+
+    @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     // Check the current theme
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
 
-    return Container(
-      padding: EdgeInsets.only(left: 30, right: 10, top: 20),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: isDarkMode ? Color(0xFF131414) : Color(0xFfE6E6E6),
-        image: !widget.isMobile
-            ? (isDarkMode
-                ? DecorationImage(
-                    image: AssetImage('assets/images/bg3.jpg'),
-                    fit: BoxFit.cover,
-                    colorFilter: ColorFilter.mode(
-                      Colors.black.withOpacity(0.6),
-                      BlendMode.dstATop,
-                    ),
-                  )
-                : null)
-            : null,
+    return FadeTransition(
+      opacity: _fadeInAnimation,
+      child: Container(
+        padding: EdgeInsets.only(left: 30, right: 10, top: 20),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: isDarkMode ? Color(0xFF131414) : Color(0xFfE6E6E6),
+          image: !widget.isMobile
+              ? (isDarkMode
+                  ? DecorationImage(
+                      image: AssetImage('assets/images/bg3.jpg'),
+                      fit: BoxFit.cover,
+                      colorFilter: ColorFilter.mode(
+                        Colors.black.withOpacity(0.6),
+                        BlendMode.dstATop,
+                      ),
+                    )
+                  : null)
+              : null,
+        ),
+        child: widget.isMobile
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Profile picture
+                  SizedBox(height: 50),
+                  profilePicture(),
+                  // name and title
+                  NameAndTitle(
+                      isMobile: widget.isMobile, contactKey: widget.contactKey),
+                ],
+              )
+            : Column(
+                children: [
+                  SizedBox(
+                    height: size.height > 1100
+                        ? size.height * 0.05
+                        : size.height * 0.1,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      // name and title
+                      Expanded(
+                        child: NameAndTitle(contactKey: widget.contactKey),
+                      ),
+                      // Profile picture
+                      Expanded(child: profilePicture()),
+                      // Social Icons
+                    ],
+                  ),
+                  SizedBox(
+                    height: size.height > 1100
+                        ? size.height * 0.05
+                        : size.height * 0.1,
+                  ),
+                ],
+              ),
       ),
-      child: widget.isMobile
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // Profile picture
-                SizedBox(height: 50),
-                profilePicture(),
-                // name and title
-                NameAndTitle(
-                    isMobile: widget.isMobile, contactKey: widget.contactKey),
-              ],
-            )
-          : Column(
-              children: [
-                SizedBox(
-                  height: size.height > 1100
-                      ? size.height * 0.05
-                      : size.height * 0.1,
-                ),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    // name and title
-                    Expanded(
-                      child: NameAndTitle(contactKey: widget.contactKey),
-                    ),
-                    // Profile picture
-                    Expanded(child: profilePicture()),
-                    // Social Icons
-                  ],
-                ),
-                SizedBox(
-                  height: size.height > 1100
-                      ? size.height * 0.05
-                      : size.height * 0.1,
-                ),
-              ],
-            ),
     );
   }
 

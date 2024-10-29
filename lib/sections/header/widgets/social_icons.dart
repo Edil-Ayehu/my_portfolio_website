@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:html' as html;
 
-class SocialIcons extends StatelessWidget {
+class SocialIcons extends StatefulWidget {
   const SocialIcons({
     super.key,
     this.isMobile = false,
@@ -10,8 +10,44 @@ class SocialIcons extends StatelessWidget {
 
   final bool isMobile;
 
+  @override
+  State<SocialIcons> createState() => _SocialIconsState();
+}
+
+class _SocialIconsState extends State<SocialIcons>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
   void _launchURL(String url) {
     html.window.open(url, '_blank');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  Widget _buildAnimatedIcon(IconData icon, String url) {
+    return MouseRegion(
+      onEnter: (_) => _controller.forward(),
+      onExit: (_) => _controller.reverse(),
+      child: ScaleTransition(
+        scale: _scaleAnimation,
+        child: IconButton(
+          icon: FaIcon(icon),
+          // ... existing icon properties ...
+          onPressed: () => _launchURL(url),
+        ),
+      ),
+    );
   }
 
   @override
@@ -21,29 +57,15 @@ class SocialIcons extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return Row(
       mainAxisAlignment:
-          isMobile ? MainAxisAlignment.center : MainAxisAlignment.start,
+          widget.isMobile ? MainAxisAlignment.center : MainAxisAlignment.start,
       children: [
-        IconButton(
-          icon: FaIcon(FontAwesomeIcons.linkedin),
-          color: isDarkMode ? Color(0xFfE6E6E6) : Color(0xFF131414),
-          iconSize: isMobile ? size.width * 0.09 : size.width * 0.03,
-          onPressed: () => _launchURL(
-              'https://www.linkedin.com/in/edilayehu-tadesse-ab4652278/'),
-        ),
+        _buildAnimatedIcon(FontAwesomeIcons.linkedin,
+            'https://www.linkedin.com/in/edilayehu-tadesse-ab4652278/'),
         SizedBox(width: 20),
-        IconButton(
-          icon: FaIcon(FontAwesomeIcons.telegram),
-          color: isDarkMode ? Color(0xFfE6E6E6) : Color(0xFF131414),
-          iconSize: isMobile ? size.width * 0.09 : size.width * 0.03,
-          onPressed: () => _launchURL('https://t.me/edilayehu'),
-        ),
+        _buildAnimatedIcon(FontAwesomeIcons.telegram, 'https://t.me/edilayehu'),
         SizedBox(width: 20),
-        IconButton(
-          icon: FaIcon(FontAwesomeIcons.instagram),
-          color: isDarkMode ? Color(0xFfE6E6E6) : Color(0xFF131414),
-          iconSize: isMobile ? size.width * 0.09 : size.width * 0.03,
-          onPressed: () => _launchURL('https://www.instagram.com/edil.ayehu/'),
-        ),
+        _buildAnimatedIcon(FontAwesomeIcons.instagram,
+            'https://www.instagram.com/edil.ayehu/'),
       ],
     );
   }

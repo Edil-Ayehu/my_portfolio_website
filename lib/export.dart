@@ -28,3 +28,5 @@ export 'package:flutter_portfolio_website/sections/services%20section/services_s
 export 'package:flutter_portfolio_website/sections/skills_section.dart/skills_section.dart';
 export 'package:font_awesome_flutter/font_awesome_flutter.dart';
 export 'package:auto_size_text/auto_size_text.dart';
+export 'package:flutter_portfolio_website/sections/header/widgets/name_and_title.dart';
+export 'package:flutter_portfolio_website/sections/header/widgets/profile_bg_container.dart';
