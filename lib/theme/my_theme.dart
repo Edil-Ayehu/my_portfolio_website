@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MyTheme {
   static final ThemeData lightTheme = ThemeData.light().copyWith(
@@ -6,52 +7,45 @@ class MyTheme {
     // fontFamily: 'Lato',
     appBarTheme: AppBarTheme(
       foregroundColor: Colors.black,
-      titleTextStyle: TextStyle(
+      titleTextStyle: GoogleFonts.outfit(
         fontSize: 24,
         fontWeight: FontWeight.bold,
         color: Colors.black,
-        fontFamily: 'Lato',
       ),
     ),
     textTheme: TextTheme(
-      titleLarge: TextStyle(
+      titleLarge: GoogleFonts.outfit(
         fontSize: 50,
         fontWeight: FontWeight.bold,
         color: Color(0xFF102C57),
-        fontFamily: 'Lato',
         letterSpacing: 1.1,
       ),
-      titleMedium: TextStyle(
+      titleMedium: GoogleFonts.outfit(
         fontSize: 36,
         fontWeight: FontWeight.w900,
-        fontFamily: 'Lato',
         color: Colors.black,
         letterSpacing: 1.1,
       ),
-      titleSmall: TextStyle(
+      titleSmall: GoogleFonts.outfit(
         fontSize: 22,
         fontWeight: FontWeight.bold,
-        fontFamily: 'Lato',
         color: Colors.black,
         letterSpacing: 1.1,
       ),
-      bodyLarge: TextStyle(
+      bodyLarge: GoogleFonts.outfit(
         fontSize: 26,
         fontWeight: FontWeight.bold,
         color: Colors.black,
-        fontFamily: 'Lato',
       ),
-      bodyMedium: TextStyle(
+      bodyMedium: GoogleFonts.outfit(
         fontSize: 20,
         fontWeight: FontWeight.bold,
         color: Colors.black,
-        fontFamily: 'Lato',
       ),
-      bodySmall: TextStyle(
+      bodySmall: GoogleFonts.outfit(
         fontSize: 16,
         fontWeight: FontWeight.bold,
         color: Colors.black,
-        fontFamily: 'Lato',
       ),
     ),
 
@@ -74,52 +68,45 @@ class MyTheme {
     // fontFamily: 'Lato',
     appBarTheme: AppBarTheme(
       foregroundColor: Color(0xFfE6E6E6),
-      titleTextStyle: TextStyle(
+      titleTextStyle: GoogleFonts.outfit(
         fontSize: 24,
         fontWeight: FontWeight.bold,
         color: Color(0xFfE6E6E6),
-        fontFamily: 'Lato',
       ),
     ),
     textTheme: TextTheme(
-      titleLarge: TextStyle(
+      titleLarge: GoogleFonts.outfit(
         fontSize: 50,
         fontWeight: FontWeight.bold,
         color: Color(0xFfE6E6E6),
-        fontFamily: 'Lato',
         letterSpacing: 1.1,
       ),
-      titleMedium: TextStyle(
+      titleMedium: GoogleFonts.outfit(
         fontSize: 36,
         fontWeight: FontWeight.w900,
         color: Color(0xFfE6E6E6),
-        fontFamily: 'Lato',
         letterSpacing: 1.1,
       ),
-      titleSmall: TextStyle(
+      titleSmall: GoogleFonts.outfit(
         fontSize: 22,
         fontWeight: FontWeight.bold,
-        fontFamily: 'Lato',
-        color: Color(0xFfE6E6E6), 
+        color: Color(0xFfE6E6E6),
         letterSpacing: 1.1,
       ),
-      bodyLarge: TextStyle(
+      bodyLarge: GoogleFonts.outfit(
         fontSize: 26,
         fontWeight: FontWeight.bold,
         color: Color(0xFfE6E6E6),
-        fontFamily: 'Lato',
       ),
-      bodyMedium: TextStyle(
+      bodyMedium: GoogleFonts.outfit(
         fontSize: 20,
         fontWeight: FontWeight.bold,
         color: Color(0xFfE6E6E6),
-        fontFamily: 'Lato',
       ),
-      bodySmall: TextStyle(
+      bodySmall: GoogleFonts.outfit(
         fontSize: 16,
         fontWeight: FontWeight.bold,
         color: Color(0xFfE6E6E6),
-        fontFamily: 'Lato',
       ),
     ),
     checkboxTheme: CheckboxThemeData(

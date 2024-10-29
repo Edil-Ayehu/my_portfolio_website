@@ -1,15 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_portfolio_website/sections/about%20section/about_section.dart';
-import 'package:flutter_portfolio_website/sections/certificates_section/certificates_section.dart';
-import 'package:flutter_portfolio_website/sections/contact%20me%20section/contact_me_section.dart';
-import 'package:flutter_portfolio_website/sections/footer/footer.dart';
-import 'package:flutter_portfolio_website/sections/header/header.dart';
-import 'package:flutter_portfolio_website/sections/portfolio%20section/portfolio_section.dart';
-import 'package:flutter_portfolio_website/sections/services%20section/services_section.dart';
-import 'package:flutter_portfolio_website/sections/skills_section.dart/skills_section.dart';
-import 'package:flutter_portfolio_website/theme/theme_controller.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_portfolio_website/export.dart';
 
 class MobileScreenLayout extends StatefulWidget {
   const MobileScreenLayout({super.key});

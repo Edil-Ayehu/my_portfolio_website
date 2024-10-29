@@ -47,6 +47,7 @@ dependencies:
   firebase_storage:
   cached_network_image:
   visibility_detector: ^0.4.0+2
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:
