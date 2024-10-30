@@ -5,7 +5,7 @@ class ProductCard extends StatelessWidget {
   final String description;
   final VoidCallback onPress;
   final double cardWidth;
-  
+
   const ProductCard({
     super.key,
     required this.title,
@@ -13,89 +13,124 @@ class ProductCard extends StatelessWidget {
     required this.onPress,
     required this.cardWidth,
   });
-
   @override
   Widget build(BuildContext context) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
     final size = MediaQuery.of(context).size;
     final isSmallScreen = size.width < 600;
-    final isMediumScreen = size.width < 900;
 
-    return Card(
-      color: isDarkMode ? const Color(0xFF131414) : const Color(0xFfE6E6E6),
-      elevation: 10,
-      child: Container(
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 200),
         width: cardWidth,
-        padding: EdgeInsets.symmetric(
-          horizontal: isSmallScreen ? 8 : 14,
-          vertical: isSmallScreen ? 8 : 14,
-        ),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(
-            color: const Color(0xFfE6E6E6),
-            width: 1.0,
-          ),
+          color: isDarkMode ? Color(0xFF1E1E1E) : Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: isDarkMode
+                  ? Colors.black.withOpacity(0.3)
+                  : Colors.grey.withOpacity(0.1),
+              blurRadius: 20,
+              offset: Offset(0, 10),
+            ),
+          ],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 10),
-            Text(
-              title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                    fontWeight: FontWeight.w600,
-                    fontSize: isSmallScreen ? 16 : (isMediumScreen ? 18 : 20),
-                  ),
-            ),
-            SizedBox(height: isSmallScreen ? 10 : 18),
-            Expanded(
-              child: AutoSizeText(
-                description,
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                minFontSize: 10,
-                maxLines: 6,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: TextButton(
-                onPressed: onPress,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Stack(
+            children: [
+              Padding(
+                padding: EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'See more',
-                      style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                            fontWeight: FontWeight.w600,
-                            decoration: TextDecoration.underline,
-                          ),
-                    ),
-                    const SizedBox(width: 5),
                     Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: isDarkMode ? const Color(0xFfE6E6E6) : const Color(0xFFDDA512),
-                        borderRadius: BorderRadius.circular(50),
+                        color: Color(0xFFDDA512).withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                      child: Center(
-                        child: Icon(
-                          Icons.navigate_next_outlined,
-                          size: isSmallScreen ? 16 : 19,
-                          color: isDarkMode ? const Color(0xFf131414) : const Color(0xFfE6E6E6),
+                      child: Text(
+                        title,
+                        style: TextStyle(
+                          color: Color(0xFFDDA512),
+                          fontWeight: FontWeight.bold,
+                          fontSize: isSmallScreen ? 18 : 22,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      description,
+                      style: TextStyle(
+                        fontSize: isSmallScreen ? 14 : 16,
+                        height: 1.6,
+                        color: isDarkMode ? Colors.grey[300] : Colors.grey[700],
+                      ),
+                    ),
+                    Spacer(),
+                    MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: onPress,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 24),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Color(0xFFDDA512), Color(0xFFD4940F)],
+                            ),
+                            borderRadius: BorderRadius.circular(30),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color(0xFFDDA512).withOpacity(0.3),
+                                blurRadius: 15,
+                                offset: Offset(0, 5),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'View Projects',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: isSmallScreen ? 14 : 16,
+                                ),
+                              ),
+                              SizedBox(width: 8),
+                              Icon(
+                                Icons.arrow_forward,
+                                color: Colors.white,
+                                size: isSmallScreen ? 18 : 20,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ],
                 ),
               ),
-            ),
-          ],
+              Positioned(
+                top: -15,
+                right: -15,
+                child: Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    color: Color(0xFFDDA512).withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -26,68 +26,59 @@ class PortfolioSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.sizeOf(context);
     final isSmallScreen = size.width < 600;
     final isMediumScreen = size.width < 900;
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    // Calculate card width based on screen size
-    double cardWidth;
-    if (isSmallScreen) {
-      cardWidth = size.width * 0.8; // 80% of screen width for mobile
-    } else if (isMediumScreen) {
-      cardWidth = size.width * 0.4; // 40% for tablet
-    } else {
-      cardWidth = size.width * 0.28; // 28% for desktop
-    }
-
-    // Calculate container height based on screen size
-    double containerHeight;
-    if (isSmallScreen) {
-      containerHeight = size.height * 0.4;
-    } else if (size.height > 1100) {
-      containerHeight = size.height * 0.3;
-    } else {
-      containerHeight = size.height * 0.5;
-    }
+    double cardWidth = isSmallScreen
+        ? size.width * 0.85
+        : (isMediumScreen ? size.width * 0.45 : size.width * 0.3);
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.only(top: size.height * 0.02),
+      padding: EdgeInsets.symmetric(vertical: size.height * 0.05),
+      // decoration: BoxDecoration(
+      //   gradient: LinearGradient(
+      //     begin: Alignment.topLeft,
+      //     end: Alignment.bottomRight,
+      //     colors: isDarkMode
+      //         ? [Color(0xFF1A1A1A), Color(0xFF262626)]
+      //         : [Color(0xFFF5F5F5), Color(0xFFE8E8E8)],
+      //   ),
+      // ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: size.width * 0.03),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: isSmallScreen ? 14 : 36.0
-            ),
-            child: Text(
-              'My Work',
-              style: Theme.of(context).textTheme.titleSmall,
+          Text(
+            'MY PORTFOLIO',
+            style: TextStyle(
+              fontSize: isSmallScreen ? 14 : 16,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 3,
+              color: Color(0xFFDDA512),
             ),
           ),
-          SectionTitle(
-            title: 'Recent Projects',
-            isMobile: isSmallScreen,
+          SizedBox(height: 12),
+          Text(
+            'Recent Projects',
+            style: TextStyle(
+              fontSize: isSmallScreen ? 28 : 36,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1,
+            ),
           ),
-          SizedBox(height: size.width * 0.045),
+          SizedBox(height: size.height * 0.05),
           SizedBox(
-            height: containerHeight,
+            height: isSmallScreen ? size.height * 0.4 : size.height * 0.5,
             child: ListView.builder(
-              cacheExtent: 500,
-              addAutomaticKeepAlives: true,
-              shrinkWrap: true,
-              itemCount: portfolios.length,
               scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.symmetric(
-                horizontal: isSmallScreen ? 14 : 36.0
-              ),
+              padding:
+                  EdgeInsets.symmetric(horizontal: isSmallScreen ? 20 : 40),
+              itemCount: portfolios.length,
               itemBuilder: (context, index) {
                 final portfolio = portfolios[index];
                 return Padding(
-                  padding: EdgeInsets.only(
-                    right: isSmallScreen ? 14 : 30.0
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 15),
                   child: ProductCard(
                     title: portfolio['title']!,
                     description: portfolio['description']!,
