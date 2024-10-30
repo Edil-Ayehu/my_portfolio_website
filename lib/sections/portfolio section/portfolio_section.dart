@@ -38,15 +38,15 @@ class PortfolioSection extends StatelessWidget {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(vertical: size.height * 0.05),
-      // decoration: BoxDecoration(
-      //   gradient: LinearGradient(
-      //     begin: Alignment.topLeft,
-      //     end: Alignment.bottomRight,
-      //     colors: isDarkMode
-      //         ? [Color(0xFF1A1A1A), Color(0xFF262626)]
-      //         : [Color(0xFFF5F5F5), Color(0xFFE8E8E8)],
-      //   ),
-      // ),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isDarkMode
+              ? [Color(0xFF1A1A1A), Color(0xFF262626)]
+              : [Color(0xFFF5F5F5), Color(0xFFE8E8E8)],
+        ),
+      ),
       child: Column(
         children: [
           Text(

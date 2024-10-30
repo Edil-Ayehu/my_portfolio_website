@@ -55,6 +55,15 @@ class _AboutSectionState extends State<AboutSection>
       },
       child: Container(
         width: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: isDarkMode
+                ? [Color(0xFF1A1A1A), Color(0xFF262626)]
+                : [Color(0xFFF5F5F5), Color(0xFFE8E8E8)],
+          ),
+        ),
         padding: EdgeInsets.symmetric(horizontal: widget.isMobile ? 20 : 36),
         child: SlideTransition(
           position: _slideAnimation,
