@@ -1,4 +1,5 @@
 import 'package:flutter_portfolio_website/export.dart';
+import 'package:flutter_portfolio_website/widgets/project_shimmer.dart';
 
 class WebSampleProjects extends StatefulWidget {
   const WebSampleProjects({super.key});
@@ -35,7 +36,7 @@ class _WebSampleProjectsState extends State<WebSampleProjects> {
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
+            return const ProjectShimmer();
           }
 
           // Check if there are no projects
@@ -61,15 +62,32 @@ class _WebSampleProjectsState extends State<WebSampleProjects> {
                 children: [
                   const SizedBox(height: 28),
                   // Horizontal ListView for Project Titles
-                  SizedBox(
-                    height: 50, // Set a fixed height for the ListView
+// Replace the existing SizedBox and ListView.builder (lines 66-109) with this:
+                  Container(
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
                     child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
                       cacheExtent: 500,
                       addAutomaticKeepAlives: true,
-                      scrollDirection: Axis.horizontal,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                       itemCount: projectDocs.length,
                       itemBuilder: (context, index) {
                         String projectTitle = projectDocs[index]['title'];
+                        bool isSelected = _selectedProjectIndex == index;
+
                         return MouseRegion(
                           cursor: SystemMouseCursors.click,
                           child: GestureDetector(
@@ -78,26 +96,58 @@ class _WebSampleProjectsState extends State<WebSampleProjects> {
                                 _selectedProjectIndex = index;
                               });
                             },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16.0, vertical: 8.0),
-                              margin:
-                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                            child: AnimatedContainer(
+                              duration: Duration(milliseconds: 200),
+                              margin: EdgeInsets.symmetric(horizontal: 6),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 8),
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8.0),
-                                border: Border.all(
-                                  width: _selectedProjectIndex == index ? 2 : 1,
-                                  color: _selectedProjectIndex == index
-                                      ? const Color.fromARGB(255, 198, 143, 4)
-                                      : const Color.fromARGB(
-                                          255, 179, 182, 182),
-                                ),
+                                color: isSelected
+                                    ? Color(0xFFDDA512)
+                                    : Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: isSelected
+                                    ? [
+                                        BoxShadow(
+                                          color: Color(0xFFDDA512)
+                                              .withOpacity(0.3),
+                                          spreadRadius: 1,
+                                          blurRadius: 8,
+                                          offset: Offset(0, 2),
+                                        ),
+                                      ]
+                                    : [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.1),
+                                          spreadRadius: 1,
+                                          blurRadius: 3,
+                                          offset: Offset(0, 1),
+                                        ),
+                                      ],
                               ),
-                              child: Text(
-                                projectTitle,
-                                style: const TextStyle(
-                                  color: Color(0xFF131414),
-                                ),
+                              child: Row(
+                                children: [
+                                  if (isSelected) ...[
+                                    Icon(
+                                      Icons.check_circle_outline,
+                                      size: 18,
+                                      color: Colors.white,
+                                    ),
+                                    SizedBox(width: 8),
+                                  ],
+                                  Text(
+                                    projectTitle,
+                                    style: TextStyle(
+                                      color: isSelected
+                                          ? Colors.white
+                                          : Color(0xFF131414),
+                                      fontWeight: isSelected
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),

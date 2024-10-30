@@ -132,7 +132,7 @@ class _WebScreenLayoutState extends State<WebScreenLayout> {
           // menu bar
           Positioned(
             top: 0,
-            left: MediaQuery.sizeOf(context).width * 0.3,
+            left: 0,
             right: 0,
             child: Container(
               color: isDarkMode ? Color(0xFF131414) : Color(0xFFE6E6E6),

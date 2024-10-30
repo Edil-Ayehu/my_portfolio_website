@@ -1,4 +1,5 @@
 import 'package:flutter_portfolio_website/export.dart';
+import 'package:shimmer/shimmer.dart';
 
 class LazyLoadGridView extends StatelessWidget {
   final List<dynamic> imageUrls;
@@ -40,37 +41,26 @@ class LazyLoadGridView extends StatelessWidget {
                     return CachedNetworkImage(
                       imageUrl: imageUrls[index],
                       fit: BoxFit.cover,
-                      placeholder: (context, url) => Container(
-                        // Set minimum dimensions for the loading container
-                        constraints: BoxConstraints(
-                          minHeight: constraints.maxWidth *
-                              0.8, // 80% of width as minimum height
-                          minWidth: constraints.maxWidth,
-                        ),
-                        color: Colors.grey[200],
-                        child: const Center(
-                          child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                                Color(0xFFDDA512)),
+                      placeholder: (context, url) => Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          constraints: BoxConstraints(
+                            minHeight: constraints.maxWidth * 0.8,
+                            minWidth: constraints.maxWidth,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
                       ),
                       errorWidget: (context, url, error) => Container(
-                        // Match the same dimensions for error state
-                        constraints: BoxConstraints(
-                          minHeight: constraints.maxWidth * 0.8,
-                          minWidth: constraints.maxWidth,
-                        ),
                         color: Colors.grey[200],
                         child: const Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.error_outline,
-                                  color: Colors.red, size: 32),
-                              SizedBox(height: 8),
-                              Text("Failed to load image"),
-                            ],
+                          child: Text(
+                            'Failed to load image',
+                            style: TextStyle(color: Colors.black54),
                           ),
                         ),
                       ),

@@ -24,6 +24,7 @@ class WebMenu extends StatelessWidget {
       elevation: 2,
       child: Container(
         height: 60,
+        width: MediaQuery.sizeOf(context).width,
         padding: EdgeInsets.symmetric(horizontal: 24),
         decoration: BoxDecoration(
           color: isDarkMode ? Color(0xFF131414) : Color(0xFFE6E6E6),
@@ -31,29 +32,16 @@ class WebMenu extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Expanded(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    _buildMenuItem('HOME', Icons.home, sectionKeys['Home']!),
-                    _buildMenuItem(
-                        'ABOUT', Icons.person, sectionKeys['About']!),
-                    _buildMenuItem('SERVICES', Icons.design_services,
-                        sectionKeys['Services']!),
-                    _buildMenuItem(
-                        'PORTFOLIO', Icons.work, sectionKeys['Portfolio']!),
-                    _buildContactButton(sectionKeys['Contact']!),
-                    SizedBox(width: 16),
-                    IconButton(
-                      icon:
-                          Icon(isDarkMode ? Icons.light_mode : Icons.dark_mode),
-                      onPressed: onThemeToggle,
-                    ),
-                  ],
-                ),
-              ),
+            _buildMenuItem('HOME', Icons.home, sectionKeys['Home']!),
+            _buildMenuItem('ABOUT', Icons.person, sectionKeys['About']!),
+            _buildMenuItem(
+                'SERVICES', Icons.design_services, sectionKeys['Services']!),
+            _buildMenuItem('PORTFOLIO', Icons.work, sectionKeys['Portfolio']!),
+            _buildContactButton(sectionKeys['Contact']!),
+            SizedBox(width: 16),
+            IconButton(
+              icon: Icon(isDarkMode ? Icons.light_mode : Icons.dark_mode),
+              onPressed: onThemeToggle,
             ),
           ],
         ),
