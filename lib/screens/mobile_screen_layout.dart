@@ -1,4 +1,5 @@
 import 'package:flutter_portfolio_website/export.dart';
+import 'package:flutter_portfolio_website/sections/menu%20section/animated_menu_item.dart';
 
 class MobileScreenLayout extends StatefulWidget {
   const MobileScreenLayout({super.key});
@@ -72,72 +73,68 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: AppBar(
+    appBar: PreferredSize(
+      preferredSize: Size.fromHeight(60),
+      child: AppBar(
         backgroundColor: isDarkMode ? Color(0xFF131414) : Color(0xFFE6E6E6),
-        title: Text('Edilayehu'),
-        elevation: 0,
-        iconTheme: IconThemeData(
-          color: isDarkMode ? Color(0xFfE6E6E6) : Colors.black87,
+        elevation: 2,
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
         ),
         actions: [
           IconButton(
-            icon: Icon(
-              themeController.themeMode == ThemeMode.light
-                  ? Icons.dark_mode
-                  : Icons.light_mode,
-            ),
+            icon: Icon(isDarkMode ? Icons.light_mode : Icons.dark_mode),
             onPressed: themeController.toggleThemeMode,
           ),
         ],
       ),
+    ),
       drawer: myDrawer(isDarkMode, size, context),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            controller: _scrollController,
-            child: Column(
-              children: [
-                SizedBox(
-                  key: _homeKey,
-                  // height: MediaQuery.of(context).size.height,
-                  child: Header(isMobile: true,contactKey: _contactMeKey),
-                ),
-                SizedBox(
-                  key: _aboutKey,
-                  child: AboutSection(isMobile: true),
-                ),
-                SizedBox(
-                  key: _servicesKey,
-                  child: ServicesSection(isMobile: true),
-                ),
-                SizedBox(
-                  key: _skillsKey,
-                  child: SkillsSection(isMobile: true),
-                ),
-                SizedBox(
-                  key: _portfolioKey,
-                  child: PortfolioSection(),
-                ),
-                SizedBox(
-                  key: _certificatesKey,
-                  child: CertificatesSection(isMobile: true),
-                ),
-                SizedBox(
-                  key: _contactMeKey,
-                  child: ContactMeSection(isMobile: true),
-                ),
-                SizedBox(height: 30),
-                Footer(isMobile: true),
-              ],
+      body: SingleChildScrollView(
+        controller: _scrollController,
+        child: Column(
+          children: [
+            SizedBox(
+              key: _homeKey,
+              // height: MediaQuery.of(context).size.height,
+              child: Header(isMobile: true, contactKey: _contactMeKey),
             ),
-          ),
-        ],
+            SizedBox(
+              key: _aboutKey,
+              child: AboutSection(isMobile: true),
+            ),
+            SizedBox(
+              key: _servicesKey,
+              child: ServicesSection(isMobile: true),
+            ),
+            SizedBox(
+              key: _skillsKey,
+              child: SkillsSection(isMobile: true),
+            ),
+            SizedBox(
+              key: _portfolioKey,
+              child: PortfolioSection(),
+            ),
+            SizedBox(
+              key: _certificatesKey,
+              child: CertificatesSection(isMobile: true),
+            ),
+            SizedBox(
+              key: _contactMeKey,
+              child: ContactMeSection(isMobile: true),
+            ),
+            SizedBox(height: 30),
+            Footer(isMobile: true),
+          ],
+        ),
       ),
     );
   }
 
-  Drawer myDrawer(bool isDarkMode, Size size,
-      BuildContext context) {
+  Drawer myDrawer(bool isDarkMode, Size size, BuildContext context) {
     return Drawer(
       child: Container(
         color: isDarkMode ? Color(0xFF131414) : Color(0xFFE6E6E6),
@@ -159,85 +156,46 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
                 ),
               ),
             ),
-            ListTile(
-              leading: Icon(Icons.house_outlined),
-              title: Text(
-                'Home',
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
-              trailing: Icon(Icons.navigate_next_outlined),
+            AnimatedMenuItem(
+              title: 'Home',
+              icon: Icons.house_outlined,
+              isActive: _activeSection == 'Home',
               onTap: () {
                 Navigator.pop(context);
                 _scrollToSection(_homeKey);
               },
             ),
-            ListTile(
-              leading: FaIcon(FontAwesomeIcons.user),
-              title: Text(
-                'About',
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
-              trailing: Icon(Icons.navigate_next_outlined),
+            AnimatedMenuItem(
+              title: 'About',
+              icon: Icons.person,
+              isActive: _activeSection == 'About',
               onTap: () {
                 Navigator.pop(context);
                 _scrollToSection(_aboutKey);
               },
             ),
-            ListTile(
-              leading: FaIcon(FontAwesomeIcons.toolbox),
-              title: Text(
-                'Services',
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
-              trailing: Icon(Icons.navigate_next_outlined),
+            AnimatedMenuItem(
+              title: 'Services',
+              icon: Icons.build,
+              isActive: _activeSection == 'Services',
               onTap: () {
                 Navigator.pop(context);
                 _scrollToSection(_servicesKey);
               },
             ),
-            ListTile(
-              leading: FaIcon(FontAwesomeIcons.laptopCode),
-              title: Text(
-                'Skill Set',
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
-              trailing: Icon(Icons.navigate_next_outlined),
-              onTap: () {
-                Navigator.pop(context);
-                _scrollToSection(_skillsKey);
-              },
-            ),
-            ListTile(
-              leading: FaIcon(FontAwesomeIcons.folder),
-              title: Text(
-                'Portfolio',
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
-              trailing: Icon(Icons.navigate_next_outlined),
+            AnimatedMenuItem(
+              title: 'Portfolio',
+              icon: Icons.folder,
+              isActive: _activeSection == 'Portfolio',
               onTap: () {
                 Navigator.pop(context);
                 _scrollToSection(_portfolioKey);
               },
             ),
-            ListTile(
-              leading: Icon(Icons.verified),
-              title: Text(
-                'Certificates',
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
-              trailing: Icon(Icons.navigate_next_outlined),
-              onTap: () {
-                Navigator.pop(context);
-                _scrollToSection(_certificatesKey);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.contact_mail),
-              title: Text(
-                'Contact Me',
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
-              trailing: Icon(Icons.navigate_next_outlined),
+            AnimatedMenuItem(
+              title: 'Contact Me',
+              icon: Icons.contact_mail,
+              isActive: _activeSection == 'Contact Me',
               onTap: () {
                 Navigator.pop(context);
                 _scrollToSection(_contactMeKey);

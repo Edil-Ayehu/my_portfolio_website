@@ -4,6 +4,7 @@ import 'package:flutter_portfolio_website/sections/certificates_section/certific
 import 'package:flutter_portfolio_website/sections/contact%20me%20section/contact_me_section.dart';
 import 'package:flutter_portfolio_website/sections/footer/footer.dart';
 import 'package:flutter_portfolio_website/sections/header/header.dart';
+import 'package:flutter_portfolio_website/sections/menu%20section/web_menu.dart';
 import 'package:flutter_portfolio_website/sections/portfolio%20section/portfolio_section.dart';
 import 'package:flutter_portfolio_website/sections/services%20section/services_section.dart';
 import 'package:flutter_portfolio_website/sections/skills_section.dart/skills_section.dart';
@@ -82,8 +83,8 @@ class _WebScreenLayoutState extends State<WebScreenLayout> {
             fontWeight: FontWeight.bold,
             fontSize: size.width * 0.012,
             color: (isDarkMode
-                    ? Color(0xFfE6E6E6)
-                    : Colors.black87), // Inactive color
+                ? Color(0xFfE6E6E6)
+                : Colors.black87), // Inactive color
           );
     }
 
@@ -91,9 +92,10 @@ class _WebScreenLayoutState extends State<WebScreenLayout> {
       body: Stack(
         children: [
           SingleChildScrollView(
-            controller: _scrollController, 
+            controller: _scrollController,
             child: Column(
               children: [
+                SizedBox(height: 60),
                 SizedBox(
                   key: _homeKey,
                   child: Header(contactKey: _contactMeKey),
@@ -120,7 +122,7 @@ class _WebScreenLayoutState extends State<WebScreenLayout> {
                 ),
                 SizedBox(
                   key: _contactMeKey,
-                  child: ContactMeSection(), 
+                  child: ContactMeSection(),
                 ),
                 SizedBox(height: 30),
                 Footer(),
@@ -130,110 +132,24 @@ class _WebScreenLayoutState extends State<WebScreenLayout> {
           // menu bar
           Positioned(
             top: 0,
+            left: MediaQuery.sizeOf(context).width * 0.3,
             right: 0,
-            left: size.width * 0.5,
-            child: SizedBox(
-              // width: double.infinity,
-              height: 60,
-              child: Card(
-                elevation: 0,
-                margin: EdgeInsets.zero,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.zero,
-                ),
-                color: isDarkMode ? Color(0xFF131414) : Color(0xFFE6E6E6),
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Menu item with MouseRegion for hover effect
-                      MouseRegion(
-                        cursor: SystemMouseCursors
-                            .click, // Change cursor to pointer
-                        child: GestureDetector(
-                          onTap: () {
-                            _scrollToSection(_homeKey);
-                          },
-                          child: Text('HOME', style: _menuTextStyle('Home')),
-                        ),
-                      ),
-                      SizedBox(width: size.width * 0.025),
-                      MouseRegion(
-                        cursor: SystemMouseCursors
-                            .click, // Change cursor to pointer
-                        child: GestureDetector(
-                          onTap: () {
-                            _scrollToSection(_aboutKey);
-                          },
-                          child: Text('ABOUT', style: _menuTextStyle('About')),
-                        ),
-                      ),
-                      SizedBox(width: size.width * 0.025),
-                      MouseRegion(
-                        cursor: SystemMouseCursors
-                            .click, // Change cursor to pointer
-                        child: GestureDetector(
-                          onTap: () {
-                            _scrollToSection(_servicesKey);
-                          },
-                          child: Text('SERVICES',
-                              style: _menuTextStyle('Services')),
-                        ),
-                      ),
-                      SizedBox(width: size.width * 0.025),
-                      MouseRegion(
-                        cursor: SystemMouseCursors
-                            .click, // Change cursor to pointer
-                        child: GestureDetector(
-                          onTap: () {
-                            _scrollToSection(_portfolioKey);
-                          },
-                          child: Text('PORTFOLIO',
-                              style: _menuTextStyle('Portfolio')),
-                        ),
-                      ),
-                      SizedBox(width: size.width * 0.025),
-                      MouseRegion(
-                        cursor: SystemMouseCursors
-                            .click, // Change cursor to pointer
-                        child: GestureDetector(
-                          onTap: () {
-                            _scrollToSection(_contactMeKey);
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: isDarkMode
-                                  ? Color(0xFfE6E6E6)
-                                  : Color(0xFFDDA512),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              'CONTACT ME',
-                              style: _menuTextStyle('Contact me').copyWith(
-                                color: isDarkMode
-                                    ? Color(0xFF131414)
-                                    : Color(0xFfE6E6E6),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: size.width * 0.025),
-                      IconButton(
-                        icon: Icon(
-                          themeController.themeMode == ThemeMode.light
-                              ? Icons.dark_mode
-                              : Icons.light_mode,
-                        ),
-                        onPressed: themeController.toggleThemeMode,
-                      ),
-                      SizedBox(width: size.width * 0.015),
-                    ],
-                  ),
-                ),
+            child: Container(
+              color: isDarkMode ? Color(0xFF131414) : Color(0xFFE6E6E6),
+              child: WebMenu(
+                activeSection: _activeSection,
+                onSectionTap: _scrollToSection,
+                sectionKeys: {
+                  'Home': _homeKey,
+                  'About': _aboutKey,
+                  'Services': _servicesKey,
+                  'Skills': _skillsKey,
+                  'Portfolio': _portfolioKey,
+                  'Certificates': _certificatesKey,
+                  'Contact': _contactMeKey,
+                },
+                onThemeToggle: themeController.toggleThemeMode,
+                isDarkMode: isDarkMode,
               ),
             ),
           ),
