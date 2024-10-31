@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter_portfolio_website/export.dart';
-import 'package:flutter_portfolio_website/widgets/different_color_section_title.dart';
 
 class AboutText extends StatefulWidget {
   final bool isMobile;
@@ -25,12 +24,13 @@ My journey in software development has equipped me with:
 • Proficiency in state management solutions
 • Version control with Git
 
-I'm constantly learning and staying updated with the latest technologies to deliver modern, efficient solutions. My goal is to create impactful digital experiences that make a difference.''';
+I'm constantly learning and staying updated with the latest technologies to deliver modern, efficient solutions. My goal is to create impactful digital experiences that make a difference.'''; // Your existing text
 
   bool get _isMounted => mounted;
   String _displayText = '';
   Timer? _timer;
   int _currentIndex = 0;
+  bool get shouldAnimate => !widget.isMobile;
 
   @override
   void initState() {
@@ -45,7 +45,13 @@ I'm constantly learning and staying updated with the latest technologies to deli
     );
 
     _controller.forward();
-    _startTypingAnimation();
+
+    // Only start typing animation for web layout
+    if (shouldAnimate) {
+      _startTypingAnimation();
+    } else {
+      _displayText = aboutMeText; // Show full text immediately on mobile
+    }
   }
 
   void _startTypingAnimation() {
@@ -77,11 +83,11 @@ I'm constantly learning and staying updated with the latest technologies to deli
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (!widget.isMobile) ...[
-          DifferentColorSectionTitle(
-            firstText: 'About',
-            secondText: 'me',
-          ),
-          SizedBox(height: 20),
+          // DifferentColorSectionTitle(
+          //   firstText: 'About',
+          //   secondText: 'me',
+          // ),
+          // SizedBox(height: 20),
         ],
         FadeTransition(
           opacity: _fadeAnimation,
@@ -95,7 +101,7 @@ I'm constantly learning and staying updated with the latest technologies to deli
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SelectableText(
-                  _displayText,
+                  shouldAnimate ? _displayText : aboutMeText,
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         letterSpacing: 1.2,
                         height: 1.6,
@@ -103,7 +109,7 @@ I'm constantly learning and staying updated with the latest technologies to deli
                         fontSize: widget.isMobile ? 16 : 18,
                       ),
                 ),
-                if (_currentIndex >= aboutMeText.length) ...[
+                if (!shouldAnimate || _currentIndex >= aboutMeText.length) ...[
                   SizedBox(height: 20),
                   _buildSkillChips(),
                 ],
@@ -116,35 +122,86 @@ I'm constantly learning and staying updated with the latest technologies to deli
   }
 
   Widget _buildSkillChips() {
-    return Wrap(
-      spacing: 24,
-      runSpacing: 14,
-      children: [
-        _buildChip('Flutter'),
-        _buildChip('Dart'),
-        _buildChip('Firebase'),
-        _buildChip('UI/UX'),
-        _buildChip('Git'),
-        _buildChip('REST API'),
-      ],
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Skills & Technologies',
+            style: TextStyle(
+              fontSize: widget.isMobile ? 20 : 24,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFFDDA512),
+            ),
+          ),
+          SizedBox(height: 16),
+          Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            children: [
+              _buildChip('Flutter', Icons.flutter_dash),
+              _buildChip('Mobile Dev', Icons.phone_iphone),
+              _buildChip('Web Dev', Icons.web),
+              _buildChip('UI/UX', Icons.design_services),
+              _buildChip('Database', Icons.storage),
+              _buildChip('API', Icons.api),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildChip(String label) {
+  Widget _buildChip(String label, IconData icon) {
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    return Chip(
-      label: Text(label),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(
-          color: isDarkMode ? Colors.white24 : Colors.black12,
-          width: 1,
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 200),
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: isDarkMode
+                ? [Color(0xFF2C2C2C), Color(0xFF1C1C1C)]
+                : [Color(0xFFFFFFFF), Color(0xFFF5F5F5)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Color(0xFFDDA512).withOpacity(0.2),
+              blurRadius: 8,
+              offset: Offset(0, 4),
+            ),
+          ],
+          border: Border.all(
+            color: Color(0xFFDDA512).withOpacity(0.3),
+            width: 1,
+          ),
         ),
-      ),
-      backgroundColor: isDarkMode ? Color(0xFF1C1B1F) : Color(0xFFF0F8FF),
-      labelStyle: TextStyle(
-        color: isDarkMode ? Colors.white70 : Colors.black87,
-        fontWeight: FontWeight.w500,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: widget.isMobile ? 18 : 20,
+              color: Color(0xFFDDA512),
+            ),
+            SizedBox(width: 8),
+            Text(
+              label,
+              style: TextStyle(
+                color:
+                    isDarkMode ? Colors.white.withOpacity(0.9) : Colors.black87,
+                fontWeight: FontWeight.w500,
+                fontSize: widget.isMobile ? 14 : 16,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

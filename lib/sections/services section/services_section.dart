@@ -69,7 +69,7 @@ class ServicesSection extends StatelessWidget {
     final services = [
       ServiceData(
         'Mobile App Development',
-        'Flutter • React Native\nNative Android/iOS',
+        'Flutter\nNative Android/iOS',
         Icons.phone_iphone,
       ),
       ServiceData(

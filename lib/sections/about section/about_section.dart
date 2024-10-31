@@ -1,7 +1,6 @@
 import 'package:flutter_portfolio_website/export.dart';
 import 'package:flutter_portfolio_website/sections/about%20section/widgets/about_section_picture.dart';
 import 'package:flutter_portfolio_website/sections/about%20section/widgets/about_text.dart';
-import 'package:flutter_portfolio_website/widgets/different_color_section_title.dart';
 
 class AboutSection extends StatefulWidget {
   final bool isMobile;
@@ -21,7 +20,7 @@ class _AboutSectionState extends State<AboutSection>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 1200),
+      duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
 
@@ -33,12 +32,6 @@ class _AboutSectionState extends State<AboutSection>
       begin: const Offset(0, 0.3),
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 
   @override
@@ -64,42 +57,79 @@ class _AboutSectionState extends State<AboutSection>
                 : [Color(0xFFF5F5F5), Color(0xFFE8E8E8)],
           ),
         ),
-        padding: EdgeInsets.symmetric(horizontal: widget.isMobile ? 20 : 36),
-        child: SlideTransition(
-          position: _slideAnimation,
-          child: FadeTransition(
-            opacity: _fadeAnimation,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                    height:
-                        widget.isMobile ? size.width * 0.1 : size.width * 0.03),
-                widget.isMobile
-                    ? Column(
-                        children: [
-                          DifferentColorSectionTitle(
-                            firstText: 'About',
-                            secondText: 'me',
-                          ),
-                          SizedBox(height: 30),
-                          AboutSectionPicture(isMobile: true),
-                          SizedBox(height: 45),
-                          AboutText(isMobile: true),
-                        ],
-                      )
-                    : Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          AboutSectionPicture(),
-                          SizedBox(width: 45),
-                          Flexible(child: AboutText()),
-                        ],
-                      ),
-                SizedBox(height: size.width * 0.04),
-              ],
+        child: Stack(
+          children: [
+            // Background design elements
+            Positioned(
+              right: -50,
+              top: -50,
+              child: Container(
+                width: 200,
+                height: 200,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFFDDA512).withOpacity(0.1),
+                      Colors.transparent
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
+            // Main content
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: widget.isMobile ? 20 : size.width * 0.1,
+                vertical: size.height * 0.08,
+              ),
+              child: SlideTransition(
+                position: _slideAnimation,
+                child: FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: Column(
+                    children: [
+                      Text(
+                        'ABOUT ME',
+                        style: TextStyle(
+                          fontSize: widget.isMobile ? 14 : 16,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 3,
+                          color: Color(0xFFDDA512),
+                        ),
+                      ),
+                      SizedBox(height: 12),
+                      Text(
+                        'Know Me More',
+                        style: TextStyle(
+                          fontSize: widget.isMobile ? 28 : 36,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1,
+                        ),
+                      ),
+                      SizedBox(height: size.height * 0.06),
+                      widget.isMobile
+                          ? Column(
+                              children: [
+                                AboutSectionPicture(isMobile: true),
+                                SizedBox(height: 40),
+                                AboutText(isMobile: true),
+                              ],
+                            )
+                          : Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(flex: 2, child: AboutSectionPicture()),
+                                SizedBox(width: 60),
+                                Expanded(flex: 3, child: AboutText()),
+                              ],
+                            ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
