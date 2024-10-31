@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class SkillContainer extends StatelessWidget {
+class SkillContainer extends StatefulWidget {
   final String skillName;
   final double percentage;
   final String imageUrl;
@@ -15,122 +15,148 @@ class SkillContainer extends StatelessWidget {
   });
 
   @override
+  State<SkillContainer> createState() => _SkillContainerState();
+}
+
+class _SkillContainerState extends State<SkillContainer>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _progressAnimation;
+  bool isHovered = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: Duration(milliseconds: 1500),
+      vsync: this,
+    );
+    _progressAnimation = Tween<double>(begin: 0, end: widget.percentage)
+        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    // Check the current theme
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 20),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Image widget
-          Image.asset(
-            imageUrl,
-            width: isMobile ? size.width * 0.07 : size.width * 0.03,
-            height: isMobile ? size.width * 0.07 : size.width * 0.03,
-            color: isDarkMode ? Colors.white : Color(0xFF131414),
-          ),
-          SizedBox(width: 10), // Spacing between image and text
-
-          // Using Expanded to ensure flexible layout
-
-          isMobile
-              ? Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+    return MouseRegion(
+      onEnter: (_) => setState(() => isHovered = true),
+      onExit: (_) => setState(() => isHovered = false),
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 200),
+        padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: isDarkMode
+              ? (isHovered ? Colors.black.withOpacity(0.3) : Colors.transparent)
+              : (isHovered ? Colors.grey[100] : Colors.transparent),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xFFDDA512),
+                    Color(0xFFD4940F),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(0xFFDDA512).withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Image.asset(
+                widget.imageUrl,
+                width: widget.isMobile ? 24 : 28,
+                height: widget.isMobile ? 24 : 28,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // Row for skill name and percentage
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // Skill name
-                          Flexible(
-                            child: Text(
-                              skillName,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium!
-                                  .copyWith(
-                                    overflow: TextOverflow.ellipsis,
-                                    fontSize: 18,
-                                  ),
-                            ),
-                          ),
-                          // Percentage text
-                          Text(
-                            '${(percentage * 100).toStringAsFixed(0)}%',
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(
-                                  fontSize: 18,
-                                ),
-                          ),
-                        ],
+                      Text(
+                        widget.skillName,
+                        style: TextStyle(
+                          fontSize: widget.isMobile ? 16 : 18,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.5,
+                        ),
                       ),
-                      SizedBox(height: 8),
-
-                      // LinearProgressIndicator for skill percentage
-                      LinearProgressIndicator(
-                        value: percentage, // Example: 80% skill level
-                        backgroundColor:
-                            isDarkMode ? Colors.grey[300] : Colors.grey,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          Color.fromARGB(255, 230, 193, 101),
+                      Text(
+                        '${(widget.percentage * 100).toInt()}%',
+                        style: TextStyle(
+                          fontSize: widget.isMobile ? 14 : 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFFDDA512),
                         ),
                       ),
                     ],
                   ),
-                )
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: isMobile ? size.width * 0.5 : size.width * 0.35,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  SizedBox(height: 8),
+                  AnimatedBuilder(
+                    animation: _progressAnimation,
+                    builder: (context, child) {
+                      return Stack(
                         children: [
-                          Text(skillName,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleSmall!
-                                  .copyWith(
-                                    fontSize: isMobile
-                                        ? size.width * 0.04
-                                        : size.width * 0.014,
-                                  )),
-                          Text(
-                            '${percentage * 100}%',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleSmall!
-                                .copyWith(
-                                  fontSize: isMobile
-                                      ? size.width * 0.04
-                                      : size.width * 0.014,
+                          Container(
+                            height: 8,
+                            decoration: BoxDecoration(
+                              color: isDarkMode
+                                  ? Colors.grey[800]
+                                  : Colors.grey[200],
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                          ),
+                          FractionallySizedBox(
+                            widthFactor: _progressAnimation.value,
+                            child: Container(
+                              height: 8,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Color(0xFFDDA512),
+                                    Color(0xFFD4940F),
+                                  ],
                                 ),
+                                borderRadius: BorderRadius.circular(4),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Color(0xFFDDA512).withOpacity(0.3),
+                                    blurRadius: 8,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ],
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    SizedBox(
-                      width: isMobile ? size.width * 0.5 : size.width * 0.35,
-                      child: LinearProgressIndicator(
-                        value: percentage, // 80% skill level
-                        backgroundColor:
-                            isDarkMode ? Colors.grey[300] : Colors.grey,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          Color.fromARGB(255, 230, 193, 101),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-        ],
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
