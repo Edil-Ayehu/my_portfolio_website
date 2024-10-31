@@ -124,7 +124,6 @@ class _WebScreenLayoutState extends State<WebScreenLayout> {
                   key: _contactMeKey,
                   child: ContactMeSection(),
                 ),
-                SizedBox(height: 30),
                 Footer(),
               ],
             ),
